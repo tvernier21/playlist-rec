@@ -1,10 +1,10 @@
 import numpy as np
 import spotify_util as spotify
 
-search = "2016 rap"
+search = "thugger"
 
 print("Getting songs from playlists...")
-playlists = spotify.get_playlist_from_search(search, limit=15)
+playlists = spotify.get_playlist_from_search(search, limit=10)
 tracks = [spotify.get_tracks_from_playlist(playlist) for playlist in playlists]
 
 
@@ -47,7 +47,6 @@ for track_id, _ in top_10:
             reverse=True
         )[:10]
     )
-
 # Print the results
 for i, track in enumerate(top_10_names):
     print(f"Track: {track}")
