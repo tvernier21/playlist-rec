@@ -27,7 +27,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
 }) => {
     const [open, setOpen] = useState<boolean>(true);
-    console.log(tracks)
 
     return (
         <div 
