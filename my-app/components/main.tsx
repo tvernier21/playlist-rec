@@ -37,7 +37,10 @@ const MainPage: React.FC = () => {
 
     return (
         <section className="w-full h-full flex overflow-hidden relative">
-            <GraphPage />
+            <GraphPage 
+                nodes={nodes}
+                edges={edges}
+            />
             <SearchBar 
                 input={input}
                 setInput={setInput}

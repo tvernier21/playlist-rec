@@ -1,9 +1,27 @@
 'use client'
 
-const GraphPage: React.FC = () => {
+import { GraphCanvas } from 'reagraph'
+
+import type {
+    similarityGraphNode,
+    similarityGraphEdge,
+} from '@/lib/types/spotify'
+
+interface GraphPageProps {
+    nodes: similarityGraphNode[],
+    edges: similarityGraphEdge[],
+}
+
+const GraphPage: React.FC<GraphPageProps> = ({
+    nodes,
+    edges
+}) => {
     return (
-        <div className="w-full h-full grid grid-cols-12 grid-rows-12 gap-4 p-4 border-collapse border-gray-200">
-            
+        <div style={{ position: "fixed", width: '100%', height: '100%'}}>
+            <GraphCanvas
+                nodes={nodes}
+                edges={edges}
+            />
         </div>
     )
 }
