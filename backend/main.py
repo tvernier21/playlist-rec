@@ -37,17 +37,27 @@ async def playlists(search_query: str):
                     ] += 1
 
     return {
-        "track_freq": playlists,
-        "similarity_graph": tracks,
+        "track_freq": track_freq,
+        "similarity_graph": edge_graph.tolist(),
         "track_dict": track_dict,
     }
 
-@app.get("/track/{song_id}")
-async def track_data(song_id: str):
-    track = spotify.get_tracks_from_playlist(song_id)
+@app.get("/track/{track_id}")
+async def track_data(track_id: str):
+    track = spotify.get_song_features(track_id)
     return {
         "title": track["name"],
         "artist": track["artists"][0]["name"],
         "preview_url": track["preview_url"]
     }
 
+@app.get("/tracks/{track_ids}")
+async def tracks_data(track_ids: str):
+    tracks = spotify.get_songs_features(track_ids)
+    return {
+        "tracks": [{
+            "id": track["id"],
+            "title": track["name"],
+            "artist": track["artists"][0]["name"],
+            "preview_url": track["preview_url"]
+        } for track in tracks["tracks"]]}
