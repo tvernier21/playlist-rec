@@ -31,7 +31,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
     return (
         <div 
-            className="w-80 h-full max-h-[512px] overflow-y-scroll fixed bg-orange-200 shadow-lg transform transition-transform duration-200 ease-in-out rounded-lg ml-2 mt-2 z-10"
+            className="w-80 max-h-96 overflow-y-scroll fixed bg-orange-200 shadow-lg transform transition-transform duration-200 ease-in-out rounded-lg ml-2 mt-2 z-10"
         >
             <div className="flex flex-col p-4 space-y-2">
                 <div className="flex justify-between items-center">

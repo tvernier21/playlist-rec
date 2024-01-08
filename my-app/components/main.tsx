@@ -28,7 +28,7 @@ const MainPage: React.FC = () => {
     };
 
     return (
-        <section className="w-full h-screen flex overflow-hidden relative">
+        <section className="w-full h-full flex overflow-hidden relative">
             <GraphPage />
             <SearchBar 
                 input={input}
