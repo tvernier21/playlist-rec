@@ -1,9 +1,11 @@
-export type SpotifyTrack = {
-    id: string;
-    name: string;
+export interface trackDataType {
+    title: string;
     artist: string;
-    album: string;
-    image: string;
-    duration: number;
-    uri: string;
-};
+    preview_url: string;
+    frequency: number;
+    map_idx: number;
+}
+
+export interface tracksDataMap {
+    [track_id: string]: trackDataType;
+}
