@@ -4,11 +4,17 @@ import { useState } from "react"
 
 import SearchBar from "@/components/search"
 import GraphPage from "@/components/graph"
-import { tracksDataMap } from "@/lib/types/spotify"
+import type { 
+    tracksDataMap,
+    similarityGraphNode,
+    similarityGraphEdge,
+} from '@/lib/types/spotify'
 
 const MainPage: React.FC = () => {
     const [input, setInput] = useState<string>("");
     const [tracks, setTracks] = useState<tracksDataMap>();
+    const [nodes, setNodes] = useState<similarityGraphNode[]>([]);
+    const [edges, setEdges] = useState<similarityGraphEdge[]>([]);
 
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -19,6 +25,8 @@ const MainPage: React.FC = () => {
             if (res) {
                 const data = await res.json();
                 setTracks(data.track_data);
+                setNodes(data.graph_data.nodes);
+                setEdges(data.graph_data.edges);
             }
         } catch (error) {
             console.log(error);

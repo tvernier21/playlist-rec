@@ -9,3 +9,15 @@ export interface trackDataType {
 export interface tracksDataMap {
     [track_id: string]: trackDataType;
 }
+
+export interface similarityGraphNode {
+    id: string;
+    label: string;
+}
+
+export interface similarityGraphEdge {
+    source: string;
+    target: string;
+    id: string;
+    label: string;
+}
