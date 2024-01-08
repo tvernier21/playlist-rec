@@ -17,6 +17,22 @@ const SearchBar: React.FC<SearchBarProps> = ({
     setInput
 }) => {
     const [open, setOpen] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const onSearch = async () => {
+        try {
+            setLoading(true);
+            const res = await fetch(`/api/search/${input}`);
+            if (res) {
+                const data = await res.json();
+                console.log(data);
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="w-64 h-256 fixed bg-orange-200 shadow-lg transform transition-transform duration-200 ease-in-out rounded-lg ml-2 mt-2 z-10">
@@ -36,7 +52,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
                         onChange={(e) => setInput(e.target.value)}
                     />
                 </div>
-                <Button className="h-8 w-full bg-white text-black hover:bg-gray-300">
+                <Button 
+                    className="h-8 w-full bg-white text-black hover:bg-gray-300"
+                    onClick={onSearch}
+                >
                     Search
                 </Button>
                 {open && (
