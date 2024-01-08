@@ -36,24 +36,12 @@ async def playlists(search_query: str):
                         track_dict[other_track]
                     ] += 1
 
-    most_freq = sorted(track_freq.items(), key=lambda x: x[1], reverse=True)
-    top_10 = most_freq[:10]
-    top_10_names = [spotify.get_song_features(track[0])["name"] for track in top_10]\
-
-    similarity = []
-    for track_id, _ in top_10:
-        similarity.append(
-            sorted(
-                [(other_track, edge_graph[track_dict[track_id], track_dict[other_track]]) for other_track in unique_tracks],
-                key=lambda x: x[1],
-                reverse=True
-            )[:10]
-        )
-
     return {
-        "top 10 songs": top_10_names,
-        "similarity": similarity
+        "track_freq": playlists,
+        "similarity_graph": tracks,
+        "track_dict": track_dict,
     }
+
     
 
 
