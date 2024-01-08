@@ -85,4 +85,16 @@ def get_song_features(track_id):
         return None
     return res
 
+def get_songs_features(track_ids_str):
+    res = requests.get(SPOTIFY_URL + f"tracks",
+                       headers=get_api_headers(),
+                       params={
+                           "ids": track_ids_str,
+                       }).json()
+    if "error" in res:
+        raise Exception(res["error"]["message"])
+        return None
+    return res
+
+
 

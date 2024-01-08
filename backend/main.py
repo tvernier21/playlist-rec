@@ -42,6 +42,12 @@ async def playlists(search_query: str):
         "track_dict": track_dict,
     }
 
-    
-
+@app.get("/track/{song_id}")
+async def track_data(song_id: str):
+    track = spotify.get_tracks_from_playlist(song_id)
+    return {
+        "title": track["name"],
+        "artist": track["artists"][0]["name"],
+        "preview_url": track["preview_url"]
+    }
 
