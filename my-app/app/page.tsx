@@ -1,6 +1,6 @@
 import MainPage from "@/components/main"
 
-export default function Home() {
+export default async function Home() {
   return (
     <main>
       <MainPage />

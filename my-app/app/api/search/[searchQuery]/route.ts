@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { 
-    tracksDataMap,
+    trackData,
     similarityGraphNode,
     similarityGraphEdge,
 } from '@/lib/types/spotify'
@@ -24,7 +24,9 @@ export async function GET(request: Request, context: contextType) {
     const similarity_graph = data["similarity_graph"];
 
     //track data is of type string -> song data
-    let track_data: tracksDataMap = {};
+    let track_data_map: {
+        [track_id: string]: trackData;
+    } = {};
     const track_ids = Object.keys(track_dict);
     const n_tracks = track_ids.length;
 
@@ -36,7 +38,8 @@ export async function GET(request: Request, context: contextType) {
         }
         const { tracks } = await res.json();
         for (const track of tracks) {
-            track_data[track["id"]] = {
+            track_data_map[track["id"]] = {
+                id: track["id"],
                 title: track["title"],
                 artist: track["artist"],
                 preview_url: track["preview_url"],
@@ -45,6 +48,13 @@ export async function GET(request: Request, context: contextType) {
             };
         }
     }
+    //sort track_data by frequency
+    const track_data: trackData[] = track_ids.map((track_id) => {
+        return track_data_map[track_id];
+    });
+    track_data.sort((a, b) => {
+        return b.frequency - a.frequency;
+    });
 
     // create nodes and edges
     let nodes: similarityGraphNode[] = [];
@@ -52,7 +62,7 @@ export async function GET(request: Request, context: contextType) {
     for (const track_id of track_ids) {
         nodes.push({
             id: track_id,
-            label: track_data[track_id]["title"],
+            label: track_data_map[track_id]["title"],
         });
 
         let top_edges: similarityGraphEdge[] = [];
@@ -74,6 +84,8 @@ export async function GET(request: Request, context: contextType) {
             edges.push(edge);
         });
     }
+
+
 
     return NextResponse.json({
         "graph_data": {

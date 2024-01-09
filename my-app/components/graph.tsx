@@ -1,6 +1,7 @@
 'use client'
 
-import { GraphCanvas } from 'reagraph'
+import { useRef } from "react"
+import { GraphCanvas, GraphCanvasRef, useSelection} from 'reagraph'
 
 import type {
     similarityGraphNode,
@@ -10,20 +11,32 @@ import type {
 interface GraphPageProps {
     nodes: similarityGraphNode[],
     edges: similarityGraphEdge[],
+    // doubleClickFn: (node: similarityGraphNode) => void;
 }
 
-const GraphPage: React.FC<GraphPageProps> = ({
-    nodes,
-    edges
-}) => {
-    return (
-        <div style={{ position: "fixed", width: '100%', height: '100%'}}>
-            <GraphCanvas
-                nodes={nodes}
-                edges={edges}
-            />
-        </div>
-    )
+const NetworkGraph = ({ nodes, edges }: GraphPageProps) => {
+    const graphRef = useRef<GraphCanvasRef | null>(null);
+    const {
+        selections,
+        onNodeClick,
+        onCanvasClick,
+    } = useSelection({
+        ref: graphRef,
+        nodes: nodes,
+        edges: edges,
+        selections: [],
+        type: 'single'
+    });
+
+   return <GraphCanvas 
+            ref={graphRef} 
+            nodes={nodes} 
+            edges={edges} 
+            selections={selections} 
+            // collapsedNodeIds={collapsedNodes}
+            onNodeClick={onNodeClick} 
+            onCanvasClick={onCanvasClick} 
+          />;
 }
 
-export default GraphPage;
+export default NetworkGraph;

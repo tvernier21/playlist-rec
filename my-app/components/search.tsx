@@ -8,23 +8,24 @@ import { Button } from "@/components/ui/button"
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import { FaPlay } from "react-icons/fa";
 import { MdPlayDisabled } from "react-icons/md";
-import { trackDataType, tracksDataMap } from "@/lib/types/spotify"
+import { trackData } from "@/lib/types/spotify"
 
 interface SearchBarProps {
     input: string;
     setInput: (input: string) => void;
-    onSearchFn: () => void;
+    setOnSearch: (onSearch: boolean) => void;
+    setSelectedTrack: (id: string | null) => void;
     loading: boolean;
-    tracks: tracksDataMap | undefined;
+    tracks: trackData[];
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
     input,
     setInput,
-    onSearchFn,
+    setOnSearch,
+    setSelectedTrack,
     loading,
-    tracks
-
+    tracks,
 }) => {
     const [open, setOpen] = useState<boolean>(true);
 
@@ -48,39 +49,46 @@ const SearchBar: React.FC<SearchBarProps> = ({
                         onChange={(e) => setInput(e.target.value)}
                     />
                 </div>
-                <Button 
+                <Button
                     className="h-8 w-full bg-white text-black hover:bg-gray-300"
-                    onClick={onSearchFn}
+                    onClick={() => setOnSearch(true)}
+                    disabled={loading}
                 >
                     Search
                 </Button>
                 {open && (
                     <div className="flex flex-col flex-nowrap space-y-2">
                         {loading && <p>Loading...</p>}
-                        {tracks && Object.keys(tracks).map((key) => (
-                            <div className="flex bg-white items-center space-x-4 rounded-md border p-4 hover:bg-orange-100" key={key}>
-                                <div className="flex-1 space-y-1">
-                                    <p className="text-sm font-medium leading-none">
-                                        {tracks[key].title}
-                                    </p>
-                                    <p className="text-sm text-muted-foreground">
-                                        {tracks[key].artist}
-                                    </p>
+                        {tracks && tracks.map((item) => {
+                            return(
+                                <div 
+                                    className="flex bg-white items-center space-x-4 rounded-md border p-4 hover:bg-orange-100"
+                                    onClick={() => setSelectedTrack(item.id)}
+                                    key={item.id}
+                                >
+                                    <div className="flex-1 space-y-1">
+                                        <p className="text-sm font-medium leading-none">
+                                            {item.title}
+                                        </p>
+                                        <p className="text-sm text-muted-foreground">
+                                            {item.artist}
+                                        </p>
+                                    </div>
+                                    <Button
+                                        className="bg-white text-black hover:bg-gray-300"
+                                        asChild
+                                    >
+                                        {item.preview_url ? (
+                                            <Link href={item.preview_url} target="_blank">
+                                                <FaPlay />
+                                            </Link>
+                                        ) : (
+                                            <MdPlayDisabled />
+                                        )}
+                                    </Button>
                                 </div>
-                                <Button
-                                    className="bg-white text-black hover:bg-gray-300"
-                                    asChild
-                                >   
-                                    {tracks[key].preview_url ? (
-                                        <Link href={tracks[key].preview_url} target="_blank">
-                                            <FaPlay />
-                                        </Link>
-                                    ) : (
-                                        <MdPlayDisabled />
-                                    )}
-                                </Button>
-                            </div>
-                        ))}
+                            )
+                        })}
                     </div>
                 )}
             </div>
