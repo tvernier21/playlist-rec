@@ -8,7 +8,6 @@ import type {
     similarityGraphNode,
     similarityGraphEdge,
 } from '@/lib/types/spotify'
-import { useCollapse } from "reagraph"
 
 const NetworkGraph = dynamic(() => import("@/components/graph"), { ssr: false });
 
@@ -81,7 +80,7 @@ const MainPage = () => {
 
     return (
         <div className="w-full h-full flex overflow-hidden relative">
-            {nodes && 
+            {viewNodes && 
                 <div style={{position: "fixed", width: "100%", height: "100%"}}>
                     <NetworkGraph 
                         nodes={viewNodes}

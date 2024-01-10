@@ -73,6 +73,8 @@ export async function GET(request: Request, context: contextType) {
                 target: sim_track_id,
                 id: track_id + sim_track_id,
                 label: tmp.toString(),
+                //sqrt of tmp
+                size: Math.sqrt(tmp),
             });
         });
         // sort descending

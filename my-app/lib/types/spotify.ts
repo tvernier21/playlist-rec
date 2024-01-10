@@ -17,4 +17,5 @@ export interface similarityGraphEdge {
     target: string;
     id: string;
     label: string;
+    size: number;
 }
