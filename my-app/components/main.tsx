@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect } from "react"
 import dynamic from "next/dynamic"
 import SearchBar from "@/components/search"
+import { Button } from "@/components/ui/button"
 import type { 
     trackData,
     similarityGraphNode,
@@ -13,6 +14,7 @@ const NetworkGraph = dynamic(() => import("@/components/graph"), { ssr: false })
 
 const MainPage = () => {
     const [input, setInput] = useState<string>("");
+    const [searchDepth, setSearchDepth] = useState<number>(10);
     const [onSearch, setOnSearch] = useState<boolean>(false);
     const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
@@ -56,7 +58,7 @@ const MainPage = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const res = await fetch(`/api/search/${input}`);
+                const res = await fetch(`/api/search/${input}?searchDepth=${searchDepth}`);
                 if (res) {
                     const data = await res.json();
                     setTracks(data.track_data);
@@ -85,13 +87,32 @@ const MainPage = () => {
                     <NetworkGraph 
                         nodes={viewNodes}
                         edges={viewEdges}
+                        setNodes={setViewNodes}
                         // doubleClickFn={onNodeDoubleClick}
                     />
+                    <Button
+                        className="bg-orange-300 text-black text-lg rounded-md hover:bg-orange-200 transition-colors duration-200 ease-in-out mr-3"
+                        style={{
+                            zIndex: 9,
+                            position: 'absolute',
+                            top: 15,
+                            right: 15
+                        }}
+                        onClick={() => {
+                            setViewNodes([]);
+                            setViewEdges([]);
+                        }}
+                    >
+                        Reset Graph
+                    </Button>
                 </div>
+                
             }    
             <SearchBar 
                 input={input}
                 setInput={setInput}
+                searchDepth={searchDepth}
+                setSearchDepth={setSearchDepth}
                 setOnSearch={setOnSearch}
                 setSelectedTrack={setSelectedTrack}
                 loading={loading}

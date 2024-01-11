@@ -13,7 +13,10 @@ interface contextType {
 
 export async function GET(request: Request, context: contextType) {
     const { searchQuery } = context.params;
-    const res = await fetch(`http://127.0.0.1:8000/playlists/${searchQuery}`);
+    const url = new URL(request.url);
+    const searchDepth = parseInt(url.searchParams.get('searchDepth') || "10");
+
+    const res = await fetch(`http://127.0.0.1:8000/playlists/${searchQuery}?limit=${searchDepth}`);
     if (!res.ok) {
         return NextResponse.error();
     }
@@ -63,6 +66,7 @@ export async function GET(request: Request, context: contextType) {
         nodes.push({
             id: track_id,
             label: track_data_map[track_id]["title"],
+            subLabel: track_data_map[track_id]["artist"],
         });
 
         let top_edges: similarityGraphEdge[] = [];

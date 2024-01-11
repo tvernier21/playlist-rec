@@ -5,6 +5,8 @@ import Link from "next/link"
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { Slider } from "@/components/ui/slider"
+import { Label } from "@/components/ui/label"
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import { FaPlay } from "react-icons/fa";
 import { MdPlayDisabled } from "react-icons/md";
@@ -13,6 +15,8 @@ import { trackData } from "@/lib/types/spotify"
 interface SearchBarProps {
     input: string;
     setInput: (input: string) => void;
+    searchDepth: number;
+    setSearchDepth: (depth: number) => void;
     setOnSearch: (onSearch: boolean) => void;
     setSelectedTrack: (id: string | null) => void;
     loading: boolean;
@@ -22,6 +26,8 @@ interface SearchBarProps {
 const SearchBar: React.FC<SearchBarProps> = ({
     input,
     setInput,
+    searchDepth,
+    setSearchDepth,
     setOnSearch,
     setSelectedTrack,
     loading,
@@ -31,31 +37,46 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
     return (
         <div 
-            className="w-80 max-h-96 overflow-y-scroll fixed bg-orange-200 shadow-lg transform transition-transform duration-200 ease-in-out rounded-lg ml-2 mt-2 z-10"
+            className="w-80 max-h-96 overflow-y-scroll fixed bg-orange-300 shadow-lg transform transition-transform duration-200 ease-in-out rounded-lg ml-2 mt-2 z-10"
         >
             <div className="flex flex-col p-4 space-y-2">
+                <Input 
+                    className="" 
+                    placeholder="Search..." 
+                    type="search"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                />
+                <div className="flex flex-row flex-nowrap space-x-2">
+                    <Label className="h-8 text-md pt-1">
+                        Depth
+                    </Label>
+                    <div className="h-8 w-9 text-md pt-1">
+                        {searchDepth}
+                    </div>
+                    <Slider
+                        min={1}
+                        max={50}
+                        step={1}
+                        value={[searchDepth]}
+                        onValueChange={(value) => setSearchDepth(value[0])}
+                    />
+                </div>
                 <div className="flex justify-between items-center">
                     <Button 
                         className="w-10 h-10 bg-white text-black text-lg rounded-md hover:bg-gray-300 transition-colors duration-200 ease-in-out mr-3"
                         onClick={() => setOpen(!open)}
-                    >    
+                    >       
                         {open ? <IoIosArrowDown /> : <IoIosArrowUp />}
                     </Button>
-                    <Input 
-                        className="" 
-                        placeholder="Search..." 
-                        type="search"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                    />
+                    <Button
+                        className="w-full bg-white text-black hover:bg-gray-300"
+                        onClick={() => setOnSearch(true)}
+                        disabled={loading}
+                    >
+                        Search
+                    </Button>
                 </div>
-                <Button
-                    className="h-8 w-full bg-white text-black hover:bg-gray-300"
-                    onClick={() => setOnSearch(true)}
-                    disabled={loading}
-                >
-                    Search
-                </Button>
                 {open && (
                     <div className="flex flex-col flex-nowrap space-y-2">
                         {loading && <p>Loading...</p>}

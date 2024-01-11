@@ -10,6 +10,7 @@ export interface trackData {
 export interface similarityGraphNode {
     id: string;
     label: string;
+    subLabel: string;
 }
 
 export interface similarityGraphEdge {
