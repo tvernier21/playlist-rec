@@ -11,11 +11,10 @@ import type {
 interface GraphPageProps {
     nodes: similarityGraphNode[],
     edges: similarityGraphEdge[],
-    setNodes: (nodes: similarityGraphNode[]) => void;
-    // doubleClickFn: (node: similarityGraphNode) => void;
+    doubleClickFn: (node: any) => void
 }
 
-const NetworkGraph = ({ nodes, edges, setNodes }: GraphPageProps) => {
+const NetworkGraph = ({ nodes, edges, doubleClickFn }: GraphPageProps) => {
     
     const graphRef = useRef<GraphCanvasRef | null>(null);
     const nodeRef = useRef(new Map());
@@ -43,7 +42,7 @@ const NetworkGraph = ({ nodes, edges, setNodes }: GraphPageProps) => {
                 nodes={nodes} 
                 edges={edges}
                 edgeArrowPosition="none"
-                selections={selections}
+                // selections={selections}
                 actives={actives}
                 // collapsedNodeIds={collapsedNodes}
                 
@@ -59,11 +58,13 @@ const NetworkGraph = ({ nodes, edges, setNodes }: GraphPageProps) => {
                 layoutOverrides={{
                     linkDistance: 120,
                 }}
+
+                onNodeDoubleClick={node => doubleClickFn(node)}
                 
                 // highlighting
                 onNodePointerOver={onNodePointerOver} 
                 onNodePointerOut={onNodePointerOut}
-                onNodeClick={onNodeClick} 
+                // onNodeClick={onNodeClick} 
                 onCanvasClick={onCanvasClick} 
                 />;
         </>

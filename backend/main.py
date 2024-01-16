@@ -15,8 +15,8 @@ async def root():
     }
 
 @app.get("/playlists/{search_query}")
-async def playlists(search_query: str):
-    playlists = spotify.get_playlist_from_search(search_query, limit=10)
+async def playlists(search_query: str, limit: str = 10):
+    playlists = spotify.get_playlist_from_search(search_query, limit=limit)
     tracks = [spotify.get_tracks_from_playlist(playlist) for playlist in playlists]
     
     all_tracks = [track for subtrack in tracks for track in subtrack]

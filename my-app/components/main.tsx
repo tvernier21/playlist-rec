@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import dynamic from "next/dynamic"
 import SearchBar from "@/components/search"
 import { Button } from "@/components/ui/button"
@@ -27,6 +27,29 @@ const MainPage = () => {
     const [viewNodes, setViewNodes] = useState<similarityGraphNode[]>([]);
     const [viewEdges, setViewEdges] = useState<similarityGraphEdge[]>([]);
     // const [viewCollapsed, setViewCollapsed] = useState<string[]>([]);
+
+    const onNodeDoubleClick = useCallback((node: similarityGraphNode) => {
+        const nodeId = node.id;
+        // get all nodes that are connected to the selected node
+        const connectedNodeIds = edges.filter((edge: similarityGraphEdge) => 
+                                edge.source === nodeId).map((edge: similarityGraphEdge) => 
+                                 edge.target);
+        const connectedNodes = nodes.filter((node: similarityGraphNode) => connectedNodeIds.includes(node.id));
+        const newViewNodes = [...connectedNodes];
+        // get all edges where source is the selected node
+        const nodeEdges = edges.filter((edge: similarityGraphEdge) => 
+                                edge.source === nodeId);
+        const connectedEdges = edges.filter((edge: similarityGraphEdge) =>
+                                connectedNodeIds.includes(edge.source) && edge.target === nodeId);
+        const newViewEdges = [...nodeEdges, ...connectedEdges];
+
+        const filteredViewNodes = newViewNodes.filter((node: similarityGraphNode) => 
+                                    !viewNodes.map((node: similarityGraphNode) => node.id).includes(node.id));
+        const filteredViewEdges = newViewEdges.filter((edge: similarityGraphEdge) =>
+                                    !viewEdges.map((edge: similarityGraphEdge) => edge.id).includes(edge.id));
+        setViewNodes([...viewNodes, ...filteredViewNodes]);
+        setViewEdges([...viewEdges, ...filteredViewEdges]);
+    }, [setViewNodes, setViewEdges, viewNodes, viewEdges, nodes, edges]);
 
     useEffect(() => {
         if (!selectedTrack) return;
@@ -87,8 +110,7 @@ const MainPage = () => {
                     <NetworkGraph 
                         nodes={viewNodes}
                         edges={viewEdges}
-                        setNodes={setViewNodes}
-                        // doubleClickFn={onNodeDoubleClick}
+                        doubleClickFn={onNodeDoubleClick}
                     />
                     <Button
                         className="bg-orange-300 text-black text-lg rounded-md hover:bg-orange-200 transition-colors duration-200 ease-in-out mr-3"
